@@ -78,7 +78,6 @@ def get_content(url, b):
             'push_state': push_state,
         })
 
-
     article = {
         'title': title,
         'url': url,
