@@ -1,7 +1,7 @@
 # ptt_crawler
 
 
-**ptt crawler practice**
+### ptt crawler practice
 
 1. 先run create_table.py 建立文章表格和推文表格
 2. 在ptt.py 中的BOARD輸入想要爬的看板名稱
