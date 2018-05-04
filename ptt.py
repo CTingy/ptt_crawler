@@ -1,11 +1,11 @@
 import requests
+import psycopg2
 from datetime import datetime
 from bs4 import BeautifulSoup
-import psycopg2
 
 
 PTT_URL = 'https://www.ptt.cc'
-BOARD = ['Soft_Job', 'TOEIC']
+BOARD = ['sttmountain', 'FITNESS']
 
 
 def get_web_page(url):
