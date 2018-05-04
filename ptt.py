@@ -1,8 +1,6 @@
 import requests
 from datetime import datetime
-import time
 from bs4 import BeautifulSoup
-import os, sys
 import psycopg2
 
 
@@ -78,7 +76,9 @@ def get_content(url, b):
             'push_content': push_content,
             'push_time': push_time,
             'push_state': push_state,
-            })
+        })
+
+
     article = {
         'title': title,
         'url': url,
@@ -120,7 +120,7 @@ def save_article(article, conn):
         article['push_count'],
         article['url'],
         article['time']
-        ))
+    ))
     conn.commit()
     
 
@@ -141,12 +141,13 @@ def save_push(pushes, conn):
             p['push_content'],
             p['push_state'],
             p['push_time'],
-            article_id))
+            article_id)
+        )
         conn.commit()
 
 
 def main():
-    today = time.strftime("%m/%d").lstrip('0')
+    today = datetime.now().strftime("%m/%d").lstrip('0')
     conn = connect_db()
     for b in BOARD:
         url = '{}/bbs/{}/index.html'.format(PTT_URL ,b)
