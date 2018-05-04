@@ -9,7 +9,7 @@ def create1():
 	 board CHAR(50) NOT NULL,
 	 content TEXT,
 	 push_count INT,
-	 url CHAR(150),
+	 url TEXT,
 	 article_time TIMESTAMP)''')
 	conn.commit()
 
