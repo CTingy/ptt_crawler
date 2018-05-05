@@ -6,7 +6,7 @@ from conn_info import connect_db
 
 
 PTT_URL = 'https://www.ptt.cc'
-BOARD = ['FITNESS', 'Soft_Job']
+BOARD = ['Tech_Job', 'Soft_Job']
 
 
 def get_web_page(url):
@@ -36,7 +36,11 @@ def get_articles(dom, date, conn):
         if d.find('div', 'date').text.strip() == date: 
             if d.find('a'): 
                 href = PTT_URL + d.find('a')['href']
-                article = get_content(href)
+                try:
+                    article = get_content(href)
+                except Exception as e:
+                    print('Wrong format on this page:', href)
+                    continue
                 save_article(article, conn)
                 save_push(article['push'], conn)
                 articles.append(article)

@@ -19,10 +19,13 @@ def update(conn):
     for article in articles:
         print(article[1].strip())
         dom = get_web_page(article[1].strip())
-        soup = BeautifulSoup(dom, 'lxml')
-        pushes = soup.find_all('div', 'push')
+        try:
+            soup = BeautifulSoup(dom, 'lxml')
+            pushes = soup.find_all('div', 'push')
+        except Exception as e:
+            print('Wrong format on this page:', href)
+            continue        
         push_count = article[2]
-        
         for push in pushes:
             push_time = push.find("span", "push-ipdatetime").text.strip() + year
             if today in push_time:
