@@ -1,5 +1,7 @@
 import psycopg2
 
+from conn_info import connect_db
+
 
 def create1():
 	cur.execute('''CREATE TABLE article
@@ -26,15 +28,8 @@ def create2():
 
 
 if __name__ == '__main__':
-	conn = psycopg2.connect(
-		database="testdb", 
-		user="test", 
-		password="test123",
-		host="127.0.0.1", 
-		port="5432"
-	)
+	conn = connect_db()
 	cur = conn.cursor()
 	create1()
 	create2()
 	conn.close()
-

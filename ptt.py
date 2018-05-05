@@ -1,26 +1,31 @@
 import requests
-import psycopg2
 from datetime import datetime
 from bs4 import BeautifulSoup
 
+from conn_info import connect_db
+
 
 PTT_URL = 'https://www.ptt.cc'
-BOARD = ['sttmountain', 'FITNESS']
+BOARD = ['FITNESS', 'Soft_Job']
 
 
 def get_web_page(url):
-    resp = requests.get(
-        url=url,
-        cookies={'over18': '1'}
-    )
-    if resp.status_code != 200:
-        print('Invalid url: ', resp.url)
+    try:
+        resp = requests.get(
+            url=url,
+            cookies={'over18': '1'}
+        )
+        if resp.status_code == 200:
+            return resp.text
+        else:
+            print('Wrong status code:', resp.status_code)
+            return None
+    except Exception as e:
+        print('Cannot get web page')
         return None
-    else:
-        return resp.text
 
 
-def get_articles(dom, date, b, conn):
+def get_articles(dom, date, conn):
     soup = BeautifulSoup(dom, 'lxml')
     paging_div = soup.find('div', 'btn-group btn-group-paging')
     prev_url = paging_div.find_all('a')[1]['href']
@@ -31,23 +36,26 @@ def get_articles(dom, date, b, conn):
         if d.find('div', 'date').text.strip() == date: 
             if d.find('a'): 
                 href = PTT_URL + d.find('a')['href']
-                article = get_content(href, b)
+                article = get_content(href)
                 save_article(article, conn)
                 save_push(article['push'], conn)
                 articles.append(article)
     return articles, prev_url
 
 
-def get_content(url, b):
+def get_content(url):
     resp = requests.get(url=url)
     soup = BeautifulSoup(resp.text, 'lxml')
 
     # get article content
-    div = soup.find_all('div', 'article-metaline')
-    title = div[1].find_all('span')[1].text.strip()
-    article_time = div[2].find_all('span')[1].text.strip()
+    span = soup.find_all('span', 'article-meta-value')
+    title = span[2].text.strip()
+    board = span[1].text.strip()
+    author = span[0].text.strip().split(' (')[0]
+
+    article_time = span[3].text.strip()
     dt = datetime.strptime(article_time, '%a %b %d %H:%M:%S %Y')
-    author = div[0].find_all('span')[1].text.strip().split(' ')[0]
+        
     target_content = u'※ 發信站: 批踢踢實業坊(ptt.cc),'
     main_content = soup.find(id='main-content').text.strip()
     content = main_content.split(article_time)[1].split(target_content)[0]
@@ -85,21 +93,11 @@ def get_content(url, b):
         'author': author,
         'time': dt,
         'content': content,
-        'board': b,
+        'board': board,
         'push': push_list,
     }
+    print(title)
     return article
-
-
-def connect_db():
-    conn = psycopg2.connect(
-    database="testdb", 
-    user="test", 
-    password="test123",
-    host="127.0.0.1", 
-    port="5432"
-    )
-    return conn
 
 
 def save_article(article, conn):
@@ -118,8 +116,8 @@ def save_article(article, conn):
         article['content'],
         article['push_count'],
         article['url'],
-        article['time']
-    ))
+        article['time'])
+    )
     conn.commit()
     
 
@@ -149,13 +147,13 @@ def main():
     today = datetime.now().strftime("%m/%d").lstrip('0')
     conn = connect_db()
     for b in BOARD:
-        url = '{}/bbs/{}/index.html'.format(PTT_URL ,b)
+        url = '{}/bbs/{}/index.html'.format(PTT_URL, b)
         current_page = get_web_page(url)
         if current_page:
-            current_articles, prev_url = get_articles(current_page, today, b, conn)
+            current_articles, prev_url = get_articles(current_page, today, conn)
             while current_articles:
                 current_page = get_web_page(PTT_URL+prev_url)
-                current_articles, prev_url = get_articles(current_page, today, b, conn)
+                current_articles, prev_url = get_articles(current_page, today, conn)
     conn.close()
 
     

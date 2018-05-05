@@ -12,15 +12,20 @@ PTT_URL = 'https://www.ptt.cc'
 
 
 def get_web_page(url):
-    resp = requests.get(
-        url=url,
-        cookies={'over18': '1'}
-    )
-    if resp.status_code != 200:
-        print('Invalid url: ', resp.url)
+    try:
+        resp = requests.get(
+            url=url,
+            cookies={'over18': '1'}
+        )
+        if resp.status_code == 200:
+            return resp.text
+        else:
+            print('Wrong status code:', resp.status_code)
+            return None
+    except Exception as e:
+        print('Cannot get web page')
         return None
-    else:
-        return resp.text
+
 
 
 def get_articles(dom, date):

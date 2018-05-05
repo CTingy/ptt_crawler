@@ -3,27 +3,25 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 
+from conn_info import connect_db
+from ptt import get_web_page
 
-def update(cur):
+
+def update(conn):
+    cur = conn.cursor()
     today = datetime.now().strftime("%m/%d")
     year = datetime.now().strftime('%Y')
     
+    cur = conn.cursor()
     cur.execute('SELECT article_id,url,push_count FROM article')
     articles = cur.fetchall()
     a = 0
     for article in articles:
         print(article[1].strip())
-        resp = requests.get(
-            url=article[1],
-            cookies={'over18': '1'}
-        )
-        if resp.status_code != 200:
-            print('Invalid url: ', resp.url)
-            continue
-
-        soup = BeautifulSoup(resp.text, 'lxml')
+        dom = get_web_page(article[1].strip())
+        soup = BeautifulSoup(dom, 'lxml')
         pushes = soup.find_all('div', 'push')
-        push_count = article[2] 
+        push_count = article[2]
         
         for push in pushes:
             push_time = push.find("span", "push-ipdatetime").text.strip() + year
@@ -53,20 +51,13 @@ def update(cur):
                     article[0])
                 )
                 conn.commit()
+                #print(push_content)
 
         cur.execute('UPDATE article SET push_count = %s \
             WHERE article_id = %s', (push_count, article[0]))
-        conn.commit()
 
 
 if __name__ == '__main__':
-    conn = psycopg2.connect(
-        database="testdb", 
-        user="test", 
-        password="test123",
-        host="127.0.0.1", 
-        port="5432"
-    )
-    cur = conn.cursor()
-    update(cur)
+    conn = connect_db()
+    update(conn)
     conn.close()
