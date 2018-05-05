@@ -5,8 +5,8 @@ def create1():
 	cur.execute('''CREATE TABLE article
 	 (article_id SERIAL PRIMARY KEY,
 	 title CHAR(150),
-	 author CHAR(100),
-	 board CHAR(50) NOT NULL,
+	 author CHAR(100) NOT NULL,
+	 board CHAR(50),
 	 content TEXT,
 	 push_count INT,
 	 url TEXT,

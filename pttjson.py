@@ -9,7 +9,7 @@ import json
 
 
 PTT_URL = 'https://www.ptt.cc'
-today = time.strftime("%m/%d").lstrip('0')
+
 
 def get_web_page(url):
     resp = requests.get(

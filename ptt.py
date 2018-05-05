@@ -47,7 +47,7 @@ def get_content(url, b):
     title = div[1].find_all('span')[1].text.strip()
     article_time = div[2].find_all('span')[1].text.strip()
     dt = datetime.strptime(article_time, '%a %b %d %H:%M:%S %Y')
-    author = div[0].find_all('span')[1].text.strip()
+    author = div[0].find_all('span')[1].text.strip().split(' ')[0]
     target_content = u'※ 發信站: 批踢踢實業坊(ptt.cc),'
     main_content = soup.find(id='main-content').text.strip()
     content = main_content.split(article_time)[1].split(target_content)[0]

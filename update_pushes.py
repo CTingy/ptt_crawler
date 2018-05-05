@@ -4,7 +4,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 
-
 def update(cur):
     today = datetime.now().strftime("%m/%d")
     year = datetime.now().strftime('%Y')
