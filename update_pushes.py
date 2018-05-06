@@ -24,7 +24,7 @@ def update(conn):
             pushes = soup.find_all('div', 'push')
         except Exception as e:
             print('Wrong format on this page:', href)
-            continue        
+            continue
         push_count = article[2]
         for push in pushes:
             push_time = push.find("span", "push-ipdatetime").text.strip() + year

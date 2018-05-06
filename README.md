@@ -19,6 +19,6 @@
 說明：
 
 - 儲存文章和推文時是以當天日期做識別，沒有檢查資料是否有重複，一天只要run一次`ptt.py` & `update_pushes.py`就好了，要不然會重複存到相同內容
-- conn_info.py會被`import`到其他`.py`中，若要更改路徑請注意
+- `conn_info.py` & `ptt.py`會被`import`到其他`.py`中，若要更改路徑請注意
 - 表格有兩個，分別是文章`article`與推文`push`，其中`article`的primary key:`article_id`為`push`的 foreign key
 - PTT網頁板格式時常跑掉，若該網頁格式不符，則會印出錯誤訊息：`Wrong format on this page: url`
