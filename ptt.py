@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+
+
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -150,6 +154,7 @@ def save_push(pushes, conn):
 def main():
     today = datetime.now().strftime("%m/%d").lstrip('0')
     conn = connect_db()
+    conn = None
     for b in BOARD:
         url = '{}/bbs/{}/index.html'.format(PTT_URL, b)
         current_page = get_web_page(url)
