@@ -45,8 +45,8 @@ def get_articles(dom, date, conn):
                 except Exception as e:
                     print('Wrong format on this page:', href)
                     continue
-                save_article(article, conn)
-                save_push(article['push'], conn)
+                # save_article(article, conn)
+                # save_push(article['push'], conn)
                 articles.append(article)
     return articles, prev_url
 
@@ -153,7 +153,8 @@ def save_push(pushes, conn):
 
 def main():
     today = datetime.now().strftime("%m/%d").lstrip('0')
-    conn = connect_db()
+    # conn = connect_db()
+    conn = None
     for b in BOARD:
         url = '{}/bbs/{}/index.html'.format(PTT_URL, b)
         current_page = get_web_page(url)
@@ -162,7 +163,7 @@ def main():
             while current_articles:
                 current_page = get_web_page(PTT_URL+prev_url)
                 current_articles, prev_url = get_articles(current_page, today, conn)
-    conn.close()
+    # conn.close()
 
     
 if __name__ == '__main__':
