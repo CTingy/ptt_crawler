@@ -1,5 +1,3 @@
-import psycopg2
-import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 
@@ -8,14 +6,13 @@ from ptt import get_web_page
 
 
 def update(conn):
-    cur = conn.cursor()
     today = datetime.now().strftime("%m/%d")
     year = datetime.now().strftime('%Y')
     
     cur = conn.cursor()
     cur.execute('SELECT article_id,url,push_count FROM article')
     articles = cur.fetchall()
-    a = 0
+
     for article in articles:
         print(article[1].strip())
         dom = get_web_page(article[1].strip())
@@ -23,7 +20,7 @@ def update(conn):
             soup = BeautifulSoup(dom, 'lxml')
             pushes = soup.find_all('div', 'push')
         except Exception as e:
-            print('Wrong format on this page:', href)
+            print('Wrong format on this page:', article[1].strip())
             continue
         push_count = article[2]
         for push in pushes:
@@ -33,7 +30,7 @@ def update(conn):
                 push_author = push.find("span", "f3 hl push-userid").text
                 push_content = push.find("span", "f3 push-content").text.lstrip(': ')
                 push_str = push.find("span", "push-tag").text.strip()
-                if push_str == u'推' :
+                if push_str == u'推':
                     push_state = 1
                 elif push_str == u'噓':
                     push_state = -1
@@ -54,7 +51,7 @@ def update(conn):
                     article[0])
                 )
                 conn.commit()
-                #print(push_content)
+                # print(push_content)
 
         cur.execute('UPDATE article SET push_count = %s \
             WHERE article_id = %s', (push_count, article[0]))

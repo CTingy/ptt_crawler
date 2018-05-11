@@ -3,7 +3,7 @@
 import requests
 import time
 from bs4 import BeautifulSoup
-import os, sys
+import sys
 import json
 
 
@@ -64,7 +64,7 @@ def get_content(url):
         push_content = push.find("span", "f3 push-content").text.lstrip(': ')
         push_time = push.find("span", "push-ipdatetime").text.rstrip('\n')
         push_str = push.find("span", "push-tag").text
-        if push_str == '推 ' :
+        if push_str == '推 ':
             push_state = 1
         elif push_str == '噓 ':
             push_state = -1

@@ -76,7 +76,7 @@ def get_content(url):
         push_time = push.find("span", "push-ipdatetime").text.strip() + now
         push_time = datetime.strptime(push_time, '%m/%d %H:%M%Y')
         push_str = push.find("span", "push-tag").text.strip()
-        if push_str == u'推' :
+        if push_str == u'推':
             push_state = 1
         elif push_str == u'噓':
             push_state = -1
