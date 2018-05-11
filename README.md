@@ -2,6 +2,16 @@
 
 ### ptt crawler practice
 
+Dependencies:
+- `pip install -r requirements.txt`
+
+- 或是手動安裝
+    ```
+    python3 -m pip install lxml
+    python3 -m pip install beautifulsoup4
+    python3 -m pip install psycopg2
+    ``` 
+
 目標：
 
 - 下載指定看板的當日文章和文章下推文
