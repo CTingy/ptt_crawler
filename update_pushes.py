@@ -23,7 +23,7 @@ def update(conn):
         try:
             soup = BeautifulSoup(dom, 'lxml')
             pushes = soup.find_all('div', 'push')
-        except Exception as e:
+        except TypeError:
             print('Wrong format on this page:', article[1].strip())
             continue
         push_count = article[2]

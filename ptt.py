@@ -24,7 +24,7 @@ def get_web_page(url):
         else:
             print('Wrong status code:', resp.status_code)
             return None
-    except Exception as e:
+    except TypeError:
         print('Cannot get web page')
         return None
 
@@ -42,7 +42,7 @@ def get_articles(dom, date, conn):
                 href = PTT_URL + d.find('a')['href']
                 try:
                     article = get_content(href)
-                except Exception as e:
+                except TypeError:
                     print('Wrong format on this page:', href)
                     continue
                 save_article(article, conn)

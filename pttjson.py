@@ -23,7 +23,7 @@ def get_web_page(url):
         else:
             print('Wrong status code:', resp.status_code)
             return None
-    except Exception as e:
+    except TypeError:
         print('Cannot get web page')
         return None
 
