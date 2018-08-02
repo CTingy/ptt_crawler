@@ -16,7 +16,7 @@ Dependencies:
 
 - 下載指定看板的當日文章和文章下推文
 - 更新已下載文章中的當日推文
-- 將資料存入postgresql
+- 將資料存入postgresql或是存成json檔
 
 步驟：
 
@@ -32,3 +32,4 @@ Dependencies:
 - `conn_info.py` & `ptt.py`會被`import`到其他`.py`中，若要更改路徑請注意
 - 表格有兩個，分別是文章`article`與推文`push`，其中`article`的primary key:`article_id`為`push`的 foreign key
 - PTT網頁板格式時常跑掉，若該網頁格式不符，則會印出錯誤訊息：`Wrong format on this page: url`
+- 若只是單純下載當日文章以及推文存成json的話，請直接運行`pttjson.py`即可，但此方式就沒有檢查推文是否更新的功能
